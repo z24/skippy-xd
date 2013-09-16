@@ -518,7 +518,6 @@ skippy_run(MainWin *mw, dlist *clients, Window focus, Window leader, Bool all_xi
 			ev_dump(ps, mw, &ev);
 #endif
 			const Window wid = ev_window(ps, &ev);
-                        fprintf(stdout,"%x\t%d\n",wid,die);
 
 			if (MotionNotify == ev.type) {
 				if (mw->tooltip && ps->o.tooltip_followsMouse)
