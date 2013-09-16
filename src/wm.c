@@ -544,7 +544,7 @@ wm_validate_window(session_t *ps, Window wid) {
 		// Check _NET_WM_STATE
 		prop = wid_get_prop(ps, wid, _NET_WM_STATE, 8192, XA_ATOM, 32);
 		for (int i = 0; result && i < prop.nitems; i++) {
-			long v = prop.data32[i];
+			long v = prop.data.data32[i];
 			if (_NET_WM_STATE_HIDDEN == v)
 				result = false;
 			else if (ps->o.ignoreSkipTaskbar
@@ -805,7 +805,7 @@ wid_get_prop_adv(const session_t *ps, Window w, Atom atom, long offset,
       && (!rformat || format == rformat)
       && (8 == format || 16 == format || 32 == format)) {
       return (winprop_t) {
-        .data8 = data,
+        .data.data8 = data,
         .nitems = nitems,
         .type = type,
         .format = format,
@@ -815,7 +815,7 @@ wid_get_prop_adv(const session_t *ps, Window w, Atom atom, long offset,
   sxfree(data);
 
   return (winprop_t) {
-    .data8 = NULL,
+    .data.data8 = NULL,
     .nitems = 0,
     .type = AnyPropertyType,
     .format = 0

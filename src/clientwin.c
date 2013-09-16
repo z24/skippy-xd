@@ -341,8 +341,17 @@ childwin_focus(ClientWin *cw) {
 
 	if (ps->o.movePointerOnRaise)
 		XWarpPointer(cw->mainwin->ps->dpy, None, cw->wid_client, 0, 0, 0, 0, cw->src.width / 2, cw->src.height / 2);
-	XRaiseWindow(cw->mainwin->ps->dpy, cw->wid_client);
-	XSetInputFocus(cw->mainwin->ps->dpy, cw->wid_client, RevertToParent, CurrentTime);
+
+        XEvent ev;
+        ev.xclient.type = ClientMessage;
+        ev.xclient.window = cw->wid_client;
+        ev.xclient.message_type = XInternAtom(cw->mainwin->ps->dpy, "_NET_ACTIVE_WINDOW", False);
+        ev.xclient.format = 32;
+        XSendEvent(cw->mainwin->ps->dpy, DefaultRootWindow(cw->mainwin->ps->dpy), False, SubstructureRedirectMask | SubstructureNotifyMask, &ev);
+        XMapRaised(cw->mainwin->ps->dpy, cw->wid_client);
+
+        /* XRaiseWindow(cw->mainwin->ps->dpy, cw->wid_client); */
+	/* XSetInputFocus(cw->mainwin->ps->dpy, cw->wid_client, RevertToParent, CurrentTime); */
 }
 
 int
@@ -357,8 +366,8 @@ clientwin_handle(ClientWin *cw, XEvent *ev) {
 				int ret = clientwin_action(cw,
 						ps->o.bindings_miwMouse[button]);
 				if (ret) {
-					printfef("(): Quitting.");
-					return ret;
+                                    printfef("(): Quitting.");
+                                    return ret;
 				}
 			}
 		}

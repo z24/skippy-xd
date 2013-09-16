@@ -43,11 +43,11 @@ extern Atom
 /// Structure representing Window property value.
 typedef struct {
   // All pointers have the same length, right?
-  union {
+  union{
     unsigned char *data8;
     short *data16;
     long *data32;
-  };
+  } data;
   unsigned long nitems;
   Atom type;
   int format;
@@ -178,9 +178,9 @@ winprop_get_int(const winprop_t *pprop) {
     return 0;
 
   switch (pprop->format) {
-    case 8:   tgt = *(pprop->data8);    break;
-    case 16:  tgt = *(pprop->data16);   break;
-    case 32:  tgt = *(pprop->data32);   break;
+    case 8:   tgt = *(pprop->data.data8);    break;
+    case 16:  tgt = *(pprop->data.data16);   break;
+    case 32:  tgt = *(pprop->data.data32);   break;
     default:  assert(0);
               break;
   }
@@ -200,7 +200,7 @@ wid_get_text_prop(session_t *ps, Window wid, Atom prop,
 static inline void
 free_winprop(winprop_t *pprop) {
   // Empty the whole structure to avoid possible issues
-  spxfree(&pprop->data8);
+  spxfree(&pprop->data.data8);
   pprop->nitems = 0;
 }
 
